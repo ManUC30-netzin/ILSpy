@@ -15,6 +15,32 @@ and `dnx` pick the matching one, so the command above is all you need.
   faster and does not need a .NET runtime to run.
 - Every other platform gets the framework-dependent build (`ilspycmd.any`), which runs on the .NET 10 runtime.
 
+### Kali NetHunter / Android ARM64
+
+NetHunter can run `ilspycmd` inside its Kali Linux environment when the environment provides a
+working .NET 10 ARM64 runtime. The Android host is not used directly: run these commands from the
+NetHunter Kali shell (or its proot/chroot), and keep assemblies on storage visible to that shell.
+
+```bash
+uname -m                 # expected: aarch64
+dotnet --info            # must report a .NET 10 runtime
+dotnet tool install --global ilspycmd
+export PATH="$PATH:$HOME/.dotnet/tools"
+ilspycmd --help
+ilspycmd /path/to/assembly.dll -o /path/to/decompiled
+```
+
+On NetHunter, the pointer package selects `ilspycmd.any`; it does not require the Linux x64 Native
+AOT package. If the NetHunter image cannot install or run the .NET 10 ARM64 runtime, build and run
+the framework-dependent CLI from a Linux host with a supported .NET 10 SDK instead:
+
+```bash
+git clone https://github.com/icsharpcode/ILSpy.git
+cd ILSpy
+dotnet build ILSpy.XPlat.slnf -c Release
+dotnet run --project ICSharpCode.ILSpyCmd -c Release -- /path/to/assembly.dll -o /path/to/decompiled
+```
+
 Installing or updating needs the .NET SDK 10.0.100 or newer on every platform, because older SDKs cannot
 read the pointer package.
 
