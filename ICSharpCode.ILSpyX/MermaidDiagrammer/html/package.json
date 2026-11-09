@@ -1,6 +1,9 @@
 {
   "scripts": {
-    "dev": "python3 -m http.server 4173 --bind 0.0.0.0"
+    "dev": "python3 -m http.server 4173 --bind 0.0.0.0",
+    "transpileLess": "gulp transpileLess",
+    "generate": "gulp generateHtmlDiagrammer",
+    "watch": "gulp autoRebuildOnChange"
   },
   "devDependencies": {
     "eslint": "^8.57.1",
